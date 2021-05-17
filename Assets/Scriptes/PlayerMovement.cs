@@ -4,43 +4,52 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rigidBody;
-    [SerializeField] private Animator _animator;
+    
+
+    [SerializeField]private float _angularSpeed = 20f;
+    [SerializeField] private float _speed = 3f;
+    private Rigidbody _rigidBody;
+    private Animator _animator;
+
+    public Joystick Move { get; set; }
+
     private bool _isMoving = false;
+    
     void Awake()
     {
         _rigidBody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
+       
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
-        if (Input.GetKey(KeyCode.W))
+        
+
+        if (Vector3.Magnitude(Move._direction)>0)
         {
             _animator.SetFloat("Speed", 1f);
             _isMoving = true;
+            Rotate();
 
         }
-
         
 
-        else
+        else if(Move._direction == Vector3.zero) 
         {
             _isMoving = false;
             _animator.SetFloat("Speed", 0f);
+
         }
 
-        Rotate();
 
-        
-        
     }
 
     private void FixedUpdate()
     {
         if (_isMoving)
-            _rigidBody.velocity = transform.forward*3;
+            _rigidBody.velocity = transform.forward* _speed;
         else {
             _rigidBody.velocity = Vector3.zero;
             _rigidBody.angularVelocity = Vector3.zero;
@@ -51,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Rotate()
     {
-        transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * Time.deltaTime * 300);
+       transform.forward = Vector3.Lerp(transform.forward,new Vector3(Move._direction.x, Move._direction.z, Move._direction.y), _angularSpeed * Time.deltaTime);
     }
 }
 
