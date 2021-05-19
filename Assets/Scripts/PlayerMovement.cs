@@ -55,17 +55,15 @@ public class PlayerMovement : MonoBehaviour
         }
            // _rigAnimator.SetBool("isFire", isFire = !isFire);
 
-        if (Vector3.Magnitude(Move._direction)>0 )
+        if (Vector3.Magnitude(Move._direction)>0 && !isFire)
         {
             _isMoving = true;
 
-            // _animator.SetTrigger("BlendTreeTriger");
+           // _animator.SetTrigger("BlendTreeTriger");
 
-            if (!isFire) {
-                _animator.SetFloat("Speed", 100f);
-                Rotate();
-            }
-            
+
+            _animator.SetFloat("Speed", 100f);
+            Rotate();
 
         }
         
@@ -103,7 +101,6 @@ public class PlayerMovement : MonoBehaviour
 
             if (_isMoving) {
                 Debug.Log("Second move mod is ON");
-                //_animator.SetBool("isFire", isFire);
                 _rigidBody.velocity = 2f*new Vector3(Move._direction.x, Move._direction.z, Move._direction.y);
                 _animator.SetFloat("VelocityX", Move._direction.x);
                 _animator.SetFloat("VelocityZ", Move._direction.y);
@@ -131,6 +128,7 @@ public class PlayerMovement : MonoBehaviour
    IEnumerator WaitForSecondsDuringFire(float seconds)
     {
         _animator.SetBool("isFire", isFire = !isFire);
+
         yield return new WaitForSeconds(seconds);
         _animator.SetBool("isFire", isFire = !isFire);
     }
