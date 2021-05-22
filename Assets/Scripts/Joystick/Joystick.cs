@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    
+
     [SerializeField] private Image _background;
     [SerializeField] private Image _thumble;
 
@@ -35,40 +37,42 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     private float _distance;
     private Vector3 _newPosition;
 
-    public Vector3 _direction { get; private set; }
+    public Vector3 direction { get; private set; }
 
     public void OnDrag(PointerEventData eventData)
     {
 
         _distance = Vector3.Distance(_startThumplePosition, eventData.position);
-        _direction = new Vector3(eventData.position.x, eventData.position.y) - _startThumplePosition;
-        _direction = _direction.normalized;
+        direction = new Vector3(eventData.position.x, eventData.position.y) - _startThumplePosition;
+        direction = direction.normalized;
+
+        GameEvents.RaiseOnEndDragJoystick(direction);
 
        // _background.transform.position = Vector3.Lerp(_background.transform.position, _newPosition, 2 * Time.deltaTime);
         //_thumble.transform.position = Vector3.Lerp(_thumble.transform.position, _newPosition, 2 * Time.deltaTime);
 
         if (_distance > _backgroundRadius)
         {
-            _newPosition = _startThumplePosition + _direction * _backgroundRadius;
+            _newPosition = _startThumplePosition + direction * _backgroundRadius;
             
 
         }
         else
         {
-            _direction *= _distance / _backgroundRadius;
+            direction *= _distance / _backgroundRadius;
             _newPosition = eventData.position;
         }
 
         _thumble.transform.position = _newPosition;
 
         
-        //Debug.Log($"Direction: {_direction}");
+        //Debug.Log($"Direction: {direction}");
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         _thumble.transform.position = _startThumplePosition;
-        _direction = Vector3.zero;
+        direction = Vector3.zero;
     }
 
     // Start is called before the first frame update

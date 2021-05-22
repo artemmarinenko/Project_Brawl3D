@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Joystick _joystick;
-    [SerializeField] private PlayerMovement _player;
+    [SerializeField] private Joystick _moveJoystick;
+    [SerializeField] private Joystick _shootJoystick;
+    [SerializeField] private Player _player;
     
 
     void Start()
@@ -23,7 +24,8 @@ public class GameManager : MonoBehaviour
 
     void CreatePlayer()
     {
-        _player.Move = _joystick;
+        _player.MoveJoystick = _moveJoystick;
+        _player.ShootJoystick = _shootJoystick;
     }
 
    
