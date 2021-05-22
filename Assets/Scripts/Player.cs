@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(WaitForSecondsDuringFire(0.7f));
         }
