@@ -5,63 +5,63 @@ using UnityEngine;
 
 public class Blaster : MonoBehaviour
 {
+    private const float NintyDegrees = 90f;
+
     [SerializeField] private GameObject _startPoint;
     [SerializeField] private GameObject _laserBeamPrefab;
-    
+    [SerializeField] private float _fireDistance = 10f;
+    [SerializeField] private float _laserBeamSpeed = 2f;
+    [SerializeField] private float _angleFromMiddleBeam = -20f;
+    [SerializeField] private float _angleStep = 5f;
 
-    Vector3 endPoint1;
-    Vector3 endPoint2;
-    Vector3 endPoint3;
-    GameObject laserBeam1;
-    GameObject laserBeam2;
-    GameObject laserBeam3;
-    bool isFire = false;
-    bool isFireEnded = true;
-    float t;
+    private List<GameObject> _laserBeams = new List<GameObject>();
+    private List<Vector3> _endPoints = new List<Vector3>();
 
-    // Start is called before the first frame update
-    void Start()
-    {
-       
-        
-    }
 
-    // Update is called once per frame
+
+    private bool _isFire = false;
+    private bool _isFireEnded = true;
+    private float _time;
+
+ 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isFireEnded)
+        if (Input.GetKeyDown(KeyCode.E) && _isFireEnded)
         {
-            isFireEnded = false;
-            Destroy(laserBeam1);
+            _isFireEnded = false;
             
-            laserBeam1 = Instantiate(_laserBeamPrefab, _startPoint.transform.position, Quaternion.Euler(90f, _startPoint.transform.rotation.eulerAngles.y, _startPoint.transform.rotation.eulerAngles.z));
-            laserBeam2 = Instantiate(_laserBeamPrefab, _startPoint.transform.position, Quaternion.Euler(90f, _startPoint.transform.rotation.eulerAngles.y, _startPoint.transform.rotation.eulerAngles.z));
-            laserBeam3 = Instantiate(_laserBeamPrefab, _startPoint.transform.position, Quaternion.Euler(90f, _startPoint.transform.rotation.eulerAngles.y, _startPoint.transform.rotation.eulerAngles.z));
+            for (float i = _angleFromMiddleBeam; i < Mathf.Abs(_angleFromMiddleBeam); i += _angleStep) { 
+                _laserBeams.Add(Instantiate(_laserBeamPrefab, _startPoint.transform.position, Quaternion.Euler(NintyDegrees, _startPoint.transform.rotation.eulerAngles.y, _startPoint.transform.rotation.eulerAngles.z)));
 
-            endPoint1 = _startPoint.transform.position + (_startPoint.transform.forward * 10f);
-            endPoint2 = _startPoint.transform.position + (Quaternion.Euler(0,20,0) * _startPoint.transform.forward * 10f);
-            endPoint3 = _startPoint.transform.position + (Quaternion.Euler(0, -20, 0) * _startPoint.transform.forward * 10f);
+                _endPoints.Add(_startPoint.transform.position + (Quaternion.Euler(0, 0 + i, 0) * _startPoint.transform.forward * _fireDistance));
+            }
 
-            isFire = true;
+            _isFire = true;
 
         }
 
-        if (isFire)
+        if (_isFire)
         {
-            
-            laserBeam1.transform.position = Vector3.Lerp(_startPoint.transform.position, endPoint1, t*2);
-            laserBeam2.transform.position = Vector3.Lerp(_startPoint.transform.position, endPoint2, t * 2);
-            laserBeam3.transform.position = Vector3.Lerp(_startPoint.transform.position, endPoint3, t * 2);
-            t += Time.deltaTime;
 
-            if(laserBeam1.transform.position == endPoint1 )
+            for (int i = 0; i < _laserBeams.Count; i++)
             {
-                Destroy(laserBeam1);
-                Destroy(laserBeam2);
-                Destroy(laserBeam3);
-                isFire = false;
-                isFireEnded = true;
-                t = 0;
+                _laserBeams[i].transform.position = Vector3.Lerp(_startPoint.transform.position, _endPoints[i], _time * _laserBeamSpeed);
+            }
+
+            _time += Time.deltaTime;
+
+            if (_laserBeams[0].transform.position == _endPoints[0] )
+            {
+                foreach (GameObject beam in _laserBeams)
+                {
+                    Destroy(beam);
+                }
+                _endPoints.Clear();
+                _laserBeams.Clear();
+
+                _isFire = false;
+                _isFireEnded = true;
+                _time = 0;
             }
 
         }
