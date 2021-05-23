@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GameEvents;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
@@ -22,22 +23,17 @@ public class Player : MonoBehaviour
 
     bool isFire = false;
 
-    public Joystick MoveJoystick { get; set; }
-    public Joystick ShootJoystick { get; set; }
+    public IJoystiсk MoveJoystick { get; set; }
+    public IJoystiсk ShootJoystick { get; set; }
 
     private bool _isMoving = false;
     
     void Awake()
     {
-
+        EventAggregator.Subscribe<OnDragAttackJoystickEvent>(OnDragAttackJoystickHandler);
         _rigidBody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
 
-        //_shootButton.onClick.AddListener(() => {
-
-        //    StartCoroutine(WaitForSecondsDuringFire(0.7f));
-         
-        //});
        
     } 
 
@@ -51,7 +47,7 @@ public class Player : MonoBehaviour
         }
            
 
-        if (Vector3.Magnitude(MoveJoystick.direction)>0)
+        if (Vector3.Magnitude(MoveJoystick.Direction)>0)
         {
             _isMoving = true;
 
@@ -64,7 +60,7 @@ public class Player : MonoBehaviour
 
         }
         
-        else if(MoveJoystick.direction == Vector3.zero && !isFire) 
+        else if(MoveJoystick.Direction == Vector3.zero && !isFire) 
         {
             _isMoving = false;
             _animator.SetFloat("Speed", 0);
@@ -72,7 +68,7 @@ public class Player : MonoBehaviour
         }
 
 
-        Rotate(_shootSector.transform, _angularSpeed,ShootJoystick);
+        Rotate(_shootSector.transform, _angularSpeed, ShootJoystick);
 
     }
 
@@ -92,11 +88,14 @@ public class Player : MonoBehaviour
 
     }
 
-        
+        private void OnDragAttackJoystickHandler(object sender, OnDragAttackJoystickEvent onDragAttackJoystickEvent)
+        {
+            Debug.Log("Hello");
+        }
 
-    private void Rotate(Transform transform, float angularSpeed, Joystick joystickData)
+    private void Rotate(Transform transform, float angularSpeed, IJoystiсk joystickData)
     {
-       transform.forward = Vector3.Lerp(transform.forward,new Vector3(joystickData.direction.x, joystickData.direction.z, joystickData.direction.y), angularSpeed * Time.deltaTime);
+       transform.forward = Vector3.Lerp(transform.forward,new Vector3(joystickData.Direction.x, joystickData.Direction.z, joystickData.Direction.y), angularSpeed * Time.deltaTime);
     }
     
 

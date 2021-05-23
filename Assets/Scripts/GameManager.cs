@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Joystick _moveJoystick;
-    [SerializeField] private Joystick _shootJoystick;
+    [SerializeField] private MoveJoystick _moveJoystick;
+    [SerializeField] private AttackJoystick _shootJoystick;
     [SerializeField] private Player _player;
     
 
