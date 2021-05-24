@@ -31,9 +31,8 @@ public static class MoveUtility
     public static void AttackMoveMod(Rigidbody rigidbody,Animator animator, IJoystiсk MoveJoystick, bool IsMoving, float speed)
     {
         if (IsMoving)
-        {
-            
-            rigidbody.velocity = new Vector3(MoveJoystick.Direction.x, MoveJoystick.Direction.z, MoveJoystick.Direction.y)*speed;
+        { 
+            rigidbody.velocity = new Vector3(MoveJoystick.Direction.x, MoveJoystick.Direction.z, MoveJoystick.Direction.y) * speed;
             animator.SetFloat("VelocityX", MoveJoystick.Direction.x);
             animator.SetFloat("VelocityZ", MoveJoystick.Direction.y);
         }
@@ -50,7 +49,6 @@ public static class MoveUtility
     {
         Vector3 joystickDirection = new Vector3(direction.x, direction.z, direction.y);
         transform.forward = Vector3.Lerp(transform.forward, joystickDirection, angularSpeed * Time.deltaTime);
-
     }
 
     public static void RotateForAttack(Transform transform, float angularSpeed, Vector3 direction, ValueWrapper<bool> isRotateEnded)
@@ -70,6 +68,5 @@ public static class MoveUtility
             transform.forward = new Vector3(direction.x, direction.z, direction.y);
             EventAggregator.Post(transform.gameObject, new OnRotationBeforeAttackEndedEvent() { });
         }
-  
     }
 }

@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    
-
     [SerializeField] private float _angularSpeed = 20f;
     [SerializeField] private float _angularAttackSpeed = 40f;
     [SerializeField] private float _speedNoAttackMoveMod = 3f;
@@ -72,18 +70,8 @@ public class Player : MonoBehaviour
             
         }
 
-
     }
 
- 
-
-    //IEnumerator WaitForSecondsDuringFire(float seconds)
-    //{
-    //    _animator.SetBool("isFire", ChangeFireStatus(true));
-
-    //    yield return new WaitForSeconds(seconds);
-    //    _animator.SetBool("isFire", ChangeFireStatus(false));
-    //}
 
     public bool ChangeFireStatus(bool attack)
     {
@@ -148,13 +136,13 @@ public class Player : MonoBehaviour
     }
     private void AttackEndedHandler(object sender, AttackEndedEvent onRotationBeforeAttackEndedEvent)
     {
-        Debug.Log("AttackEndede Event");
-        ChangeFireStatus(false);
-        _isAttackRotateEnded.Value = false;
-        _animator.SetBool("isFire", ChangeFireStatus(false));
-
+        if (_weapon == sender as Blaster) {
+            Debug.Log("Weapon from sender attack endded");
+            ChangeFireStatus(false);
+            _isAttackRotateEnded.Value = false;
+            _animator.SetBool("isFire", ChangeFireStatus(false));
+        }
     }
-
     #endregion
 }
 
