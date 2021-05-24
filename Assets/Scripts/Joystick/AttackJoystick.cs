@@ -14,13 +14,9 @@ public class AttackJoystick : Joystick, IDragHandler, IEndDragHandler
     }
 
     public override void OnEndDrag(PointerEventData eventData) {
-        //EventAggregator.Post(this, new OnEndDragAttackJoystickEvent() { Direction = Direction});
+        EventAggregator.Post(this, new OnEndDragAttackJoystickEvent() { Direction = Direction});
         _thumble.transform.position = _startThumplePosition;
         Direction = Vector3.zero;
     }
-    public override void OnPointerUp(PointerEventData eventData)
-    {
-        // SetBackgroundVisability(false);
-        EventAggregator.Post(this, new OnEndDragAttackJoystickEvent() { Direction = Direction });
-    }
+    
 }

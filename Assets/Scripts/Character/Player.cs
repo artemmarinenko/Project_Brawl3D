@@ -11,10 +11,10 @@ public class Player : MonoBehaviour
     
 
     [SerializeField] private float _angularSpeed = 20f;
-    [SerializeField] private float _angularSpeedAttack = 40f;
-    [SerializeField] private float _speedNoFireMoveMod = 3f;
-    [SerializeField] private float _speedFireMoveMod = 2f;
-    [SerializeField] private GameObject _shootSector;
+    [SerializeField] private float _angularAttackSpeed = 40f;
+    [SerializeField] private float _speedNoAttackMoveMod = 3f;
+    [SerializeField] private float _speedAttackMoveMod = 2f;
+    [SerializeField] private GameObject _attackSector;
     [SerializeField] private Blaster _weapon;
     
 
@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
         EventAggregator.Subscribe<AttackEndedEvent>(AttackEndedHandler);
 
         
-        _shootSector.SetActive(false);
+        _attackSector.SetActive(false);
         _rigidBody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
 
@@ -50,26 +50,11 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        if (Vector3.Magnitude(MoveJoystick.Direction)>0)
-        {
-            _isMoving = true;
+        PlayerInputControll();
 
-            if(!_isFire)
-            {
-                _animator.SetFloat("Speed", 100f);
-                MoveUtility.Rotate(transform, _angularSpeedAttack, MoveJoystick.Direction);
-            }
-        }
-        
-        else if(MoveJoystick.Direction == Vector3.zero && !_isFire) 
-        {
-            _isMoving = false;
-            _animator.SetFloat("Speed", 0);
-
-        }
+        ShootingSeсtorControll();
 
 
-        MoveUtility.Rotate(_shootSector.transform, _angularSpeedAttack, ShootJoystick.Direction);
 
     }
 
@@ -77,12 +62,12 @@ public class Player : MonoBehaviour
     {
         if (!_isFire)
         {
-            MoveUtility.NoAttackMoveMod(_rigidBody, _isMoving, _speedNoFireMoveMod);
+            MoveUtility.NoAttackMoveMod(_rigidBody, _isMoving, _speedNoAttackMoveMod);
         }
 
         else if (_isFire) {
 
-            MoveUtility.AttackMoveMod(_rigidBody, _animator, MoveJoystick, _isMoving, _speedFireMoveMod);
+            MoveUtility.AttackMoveMod(_rigidBody, _animator, MoveJoystick, _isMoving, _speedAttackMoveMod);
             MoveUtility.RotateForAttack(transform, _angularSpeed, _attackDirection,_isAttackRotateEnded);
             
         }
@@ -92,13 +77,13 @@ public class Player : MonoBehaviour
 
  
 
-    IEnumerator WaitForSecondsDuringFire(float seconds)
-    {
-        _animator.SetBool("isFire", ChangeFireStatus(true));
+    //IEnumerator WaitForSecondsDuringFire(float seconds)
+    //{
+    //    _animator.SetBool("isFire", ChangeFireStatus(true));
 
-        yield return new WaitForSeconds(seconds);
-        _animator.SetBool("isFire", ChangeFireStatus(false));
-    }
+    //    yield return new WaitForSeconds(seconds);
+    //    _animator.SetBool("isFire", ChangeFireStatus(false));
+    //}
 
     public bool ChangeFireStatus(bool attack)
     {
@@ -106,26 +91,52 @@ public class Player : MonoBehaviour
     }
 
 
-    public void Attack()
+    
+
+    private void PlayerInputControll()
     {
-        
-        _weapon.Attack();
-        
+        if (Vector3.Magnitude(MoveJoystick.Direction) > 0)
+        {
+            _isMoving = true;
+
+            if (!_isFire)
+            {
+                _animator.SetFloat("Speed", 100f);
+                MoveUtility.Rotate(transform, _angularAttackSpeed, MoveJoystick.Direction);
+            }
+        }
+
+        else if (MoveJoystick.Direction == Vector3.zero && !_isFire)
+        {
+            _isMoving = false;
+            _animator.SetFloat("Speed", 0);
+
+        }
     }
 
- 
+    private void ShootingSeсtorControll()
+    {
+        MoveUtility.Rotate(_attackSector.transform, _angularAttackSpeed, ShootJoystick.Direction);
+    }
+
+    private void Attack()
+    {
+        _weapon.Attack();
+    }
+
+
     #region EventHandlers
     private void OnDragAttackJoystickHandler(object sender, OnDragAttackJoystickEvent onDragAttackJoystickEvent)
     {
-        _shootSector.SetActive(true);
+        _attackSector.SetActive(true);
     }
 
     private void OnEndDragAttackJoystickHandler(object sender, OnEndDragAttackJoystickEvent onEndDragAttackJoystickEvent)
     {
         
         _attackDirection = onEndDragAttackJoystickEvent.Direction;
-        _shootSector.SetActive(false);
-        //StartCoroutine(WaitForSecondsDuringFire(1f));
+        _attackSector.SetActive(false);
+        
         _animator.SetBool("isFire", ChangeFireStatus(true));
 
 
@@ -143,7 +154,6 @@ public class Player : MonoBehaviour
         _animator.SetBool("isFire", ChangeFireStatus(false));
 
     }
-
 
     #endregion
 }

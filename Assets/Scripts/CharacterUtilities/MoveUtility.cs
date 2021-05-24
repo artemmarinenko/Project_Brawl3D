@@ -33,7 +33,7 @@ public static class MoveUtility
         if (IsMoving)
         {
             
-            rigidbody.velocity = 1f * new Vector3(MoveJoystick.Direction.x, MoveJoystick.Direction.z, MoveJoystick.Direction.y);
+            rigidbody.velocity = new Vector3(MoveJoystick.Direction.x, MoveJoystick.Direction.z, MoveJoystick.Direction.y)*speed;
             animator.SetFloat("VelocityX", MoveJoystick.Direction.x);
             animator.SetFloat("VelocityZ", MoveJoystick.Direction.y);
         }
@@ -44,20 +44,17 @@ public static class MoveUtility
         }
     }
 
+
+    
     public static void Rotate(Transform transform, float angularSpeed, Vector3 direction)
     {
         Vector3 joystickDirection = new Vector3(direction.x, direction.z, direction.y);
         transform.forward = Vector3.Lerp(transform.forward, joystickDirection, angularSpeed * Time.deltaTime);
-        //transform.DORotate(direction, angularSpeed, RotateMode.Fast);
-        
-            
-            
+
     }
 
     public static void RotateForAttack(Transform transform, float angularSpeed, Vector3 direction, ValueWrapper<bool> isRotateEnded)
     {
-
-        
         if (!isRotateEnded.Value)
         {
             Rotate(transform, angularSpeed, direction);
@@ -66,17 +63,13 @@ public static class MoveUtility
         {
             return;
         }
-        
 
         if (Mathf.Abs(transform.forward.x - direction.x) <= 0.001f && Mathf.Abs(transform.forward.y - direction.z) <= 0.001f && !isRotateEnded.Value)
         {
-
             isRotateEnded.Value = true;
-            Debug.Log(isRotateEnded.Value);
             transform.forward = new Vector3(direction.x, direction.z, direction.y);
             EventAggregator.Post(transform.gameObject, new OnRotationBeforeAttackEndedEvent() { });
         }
-
-       
+  
     }
 }

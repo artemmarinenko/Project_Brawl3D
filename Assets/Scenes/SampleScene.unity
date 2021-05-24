@@ -700,10 +700,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _angularSpeed: 20
-  _angularSpeedAttack: 40
-  _speedNoFireMoveMod: 3
-  _speedFireMoveMod: 2
-  _shootSector: {fileID: 1517774654}
+  _angularAttackSpeed: 40
+  _speedNoAttackMoveMod: 3
+  _speedAttackMoveMod: 2
+  _attackSector: {fileID: 1517774654}
   _weapon: {fileID: 771220128}
 --- !u!54 &153068532
 Rigidbody:
@@ -990,10 +990,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _angularSpeed: 20
-  _angularSpeedAttack: 40
-  _speedNoFireMoveMod: 3
-  _speedFireMoveMod: 2
-  _shootSector: {fileID: 0}
+  _angularAttackSpeed: 40
+  _speedNoAttackMoveMod: 3
+  _speedAttackMoveMod: 2
+  _attackSector: {fileID: 0}
   _weapon: {fileID: 0}
 --- !u!114 &321531504
 MonoBehaviour:
@@ -2346,10 +2346,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _angularSpeed: 25
-  _angularSpeedAttack: 40
-  _speedNoFireMoveMod: 3
-  _speedFireMoveMod: 2
-  _shootSector: {fileID: 0}
+  _angularAttackSpeed: 40
+  _speedNoAttackMoveMod: 3
+  _speedAttackMoveMod: 2
+  _attackSector: {fileID: 0}
   _weapon: {fileID: 0}
 --- !u!114 &843658392
 MonoBehaviour:
@@ -2472,10 +2472,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _angularSpeed: 20
-  _angularSpeedAttack: 40
-  _speedNoFireMoveMod: 3
-  _speedFireMoveMod: 2
-  _shootSector: {fileID: 0}
+  _angularAttackSpeed: 40
+  _speedNoAttackMoveMod: 3
+  _speedAttackMoveMod: 2
+  _attackSector: {fileID: 0}
   _weapon: {fileID: 0}
 --- !u!4 &923456829 stripped
 Transform:
@@ -3581,10 +3581,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _angularSpeed: 20
-  _angularSpeedAttack: 40
-  _speedNoFireMoveMod: 3
-  _speedFireMoveMod: 2
-  _shootSector: {fileID: 0}
+  _angularAttackSpeed: 40
+  _speedNoAttackMoveMod: 3
+  _speedAttackMoveMod: 2
+  _attackSector: {fileID: 0}
   _weapon: {fileID: 0}
 --- !u!136 &1395005723
 CapsuleCollider:
