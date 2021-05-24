@@ -22,8 +22,8 @@ public class Player : MonoBehaviour
     private Animator _animator;
 
     private bool _isMoving = false;
-    private Vector3 _attackDirection;
     private bool _isFire = false;
+    private Vector3 _attackDirection;
     private ValueWrapper<bool> _isAttackRotateEnded = new ValueWrapper<bool>(false);
 
 
@@ -125,8 +125,10 @@ public class Player : MonoBehaviour
         
         _attackDirection = onEndDragAttackJoystickEvent.Direction;
         _shootSector.SetActive(false);
-        StartCoroutine(WaitForSecondsDuringFire(1f));
-        
+        //StartCoroutine(WaitForSecondsDuringFire(1f));
+        _animator.SetBool("isFire", ChangeFireStatus(true));
+
+
     }
 
     private void OnRotationBeforeAttackEndedHandler(object sender, OnRotationBeforeAttackEndedEvent onRotationBeforeAttackEndedEvent)
@@ -138,6 +140,7 @@ public class Player : MonoBehaviour
         Debug.Log("AttackEndede Event");
         ChangeFireStatus(false);
         _isAttackRotateEnded.Value = false;
+        _animator.SetBool("isFire", ChangeFireStatus(false));
 
     }
 

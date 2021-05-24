@@ -20,7 +20,7 @@ public class Blaster : MonoBehaviour, IWeapon
     private List<Vector3> _endPoints = new List<Vector3>();
 
     private bool _isFire = false;
-    private bool _isFireEnded = true;
+    //private bool _isFireEnded = true;
     private float _time;
 
     public static int Counter = 0;
@@ -41,7 +41,7 @@ public class Blaster : MonoBehaviour, IWeapon
     }
 
     private void PrepareLaserBeams() {
-        _isFireEnded = false;
+        //_isFireEnded = false;
 
         for (float i = _angleFromMiddleBeam; i < Mathf.Abs(_angleFromMiddleBeam); i += _angleStep)
         {
@@ -73,7 +73,7 @@ public class Blaster : MonoBehaviour, IWeapon
                 _laserBeams.Clear();
                 EventAggregator.Post(this, new AttackEndedEvent());
                 _isFire = false;
-                _isFireEnded = true;
+                //_isFireEnded = true;
                 _time = 0;
                 return;
             }
