@@ -1,11 +1,13 @@
-﻿using System;
+﻿using GameEvents;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Blaster : MonoBehaviour
+public class Blaster : MonoBehaviour, IWeapon
 {
     private const float NintyDegrees = 90f;
+    private const float ZeroDegrees = 0f;
 
     [SerializeField] private GameObject _startPoint;
     [SerializeField] private GameObject _laserBeamPrefab;
@@ -17,40 +19,51 @@ public class Blaster : MonoBehaviour
     private List<GameObject> _laserBeams = new List<GameObject>();
     private List<Vector3> _endPoints = new List<Vector3>();
 
-
-
     private bool _isFire = false;
     private bool _isFireEnded = true;
     private float _time;
 
+    public static int Counter = 0;
+
  
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && _isFireEnded)
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            _isFireEnded = false;
-            
-            for (float i = _angleFromMiddleBeam; i < Mathf.Abs(_angleFromMiddleBeam); i += _angleStep) { 
-                _laserBeams.Add(Instantiate(_laserBeamPrefab, _startPoint.transform.position, Quaternion.Euler(NintyDegrees, _startPoint.transform.rotation.eulerAngles.y, _startPoint.transform.rotation.eulerAngles.z)));
-
-                _endPoints.Add(_startPoint.transform.position + (Quaternion.Euler(0, 0 + i, 0) * _startPoint.transform.forward * _fireDistance));
-            }
-
-            _isFire = true;
-
+            PrepareLaserBeams();
         }
 
         if (_isFire)
         {
 
-            for (int i = 0; i < _laserBeams.Count; i++)
-            {
-                _laserBeams[i].transform.position = Vector3.Lerp(_startPoint.transform.position, _endPoints[i], _time * _laserBeamSpeed);
-            }
+            ShootLaserBeams();
+        }
+    }
 
-            _time += Time.deltaTime;
+    private void PrepareLaserBeams() {
+        _isFireEnded = false;
 
-            if (_laserBeams[0].transform.position == _endPoints[0] )
+        for (float i = _angleFromMiddleBeam; i < Mathf.Abs(_angleFromMiddleBeam); i += _angleStep)
+        {
+
+            _laserBeams.Add(Instantiate(_laserBeamPrefab, _startPoint.transform.position, Quaternion.Euler(NintyDegrees, _startPoint.transform.rotation.eulerAngles.y + i, _startPoint.transform.rotation.eulerAngles.z)));
+            _endPoints.Add(_startPoint.transform.position + (Quaternion.Euler(ZeroDegrees, ZeroDegrees + i, ZeroDegrees) * _startPoint.transform.forward * _fireDistance));
+        }
+
+        
+    }
+
+    private void ShootLaserBeams()
+    {
+        for (int i = 0; i < _laserBeams.Count; i++)
+        {
+            _laserBeams[i].transform.position = Vector3.Lerp(_startPoint.transform.position, _endPoints[i], _time * _laserBeamSpeed);
+            //_laserBeams[i].transform.Translate(_endPoints[i]);
+        }
+        _time += Time.deltaTime;
+        for(int i = 0; i < _laserBeams.Count; i++)
+        {
+            if (_laserBeams[i].transform.position == _endPoints[i])
             {
                 foreach (GameObject beam in _laserBeams)
                 {
@@ -58,15 +71,19 @@ public class Blaster : MonoBehaviour
                 }
                 _endPoints.Clear();
                 _laserBeams.Clear();
-
+                EventAggregator.Post(this, new AttackEndedEvent());
                 _isFire = false;
                 _isFireEnded = true;
                 _time = 0;
+                return;
             }
-
         }
+        
+    }
 
-
-
+    public void Attack()
+    {
+        PrepareLaserBeams();
+        _isFire = true;
     }
 }

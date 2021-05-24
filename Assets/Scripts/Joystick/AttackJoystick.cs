@@ -4,12 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class AttackJoystick : Joystick, IDragHandler
+public class AttackJoystick : Joystick, IDragHandler, IEndDragHandler
 {
     public override void OnDrag(PointerEventData eventData)
     {
-        EventAggregator.Post(this, new OnDragAttackJoystickEvent());
         ThumbleManipulation(eventData);
+        EventAggregator.Post(this, new OnDragAttackJoystickEvent());
+        
     }
 
+    public override void OnEndDrag(PointerEventData eventData) {
+        //EventAggregator.Post(this, new OnEndDragAttackJoystickEvent() { Direction = Direction});
+        _thumble.transform.position = _startThumplePosition;
+        Direction = Vector3.zero;
+    }
+    public override void OnPointerUp(PointerEventData eventData)
+    {
+        // SetBackgroundVisability(false);
+        EventAggregator.Post(this, new OnEndDragAttackJoystickEvent() { Direction = Direction });
+    }
 }

@@ -43,7 +43,7 @@ public class Joystick : MonoBehaviour , IJoystiсk, IPointerDownHandler, IPointe
         SetBackgroundVisability(true);
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public virtual void OnPointerUp(PointerEventData eventData)
     {
        // SetBackgroundVisability(false);
     }
@@ -64,8 +64,9 @@ public class Joystick : MonoBehaviour , IJoystiсk, IPointerDownHandler, IPointe
 
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public virtual void OnEndDrag(PointerEventData eventData)
     {
+
         _thumble.transform.position = _startThumplePosition;
         Direction = Vector3.zero;
     }
