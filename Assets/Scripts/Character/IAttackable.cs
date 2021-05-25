@@ -4,6 +4,5 @@ using UnityEngine;
 
 public interface IAttackable 
 {
-    void AttackControll();
     void Attack();
 }

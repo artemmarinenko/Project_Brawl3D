@@ -6,24 +6,10 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player : Character
 {
-    [SerializeField] private float _angularSpeed = 20f;
-    [SerializeField] private float _angularAttackSpeed = 40f;
-    [SerializeField] private float _speedNoAttackMoveMod = 3f;
-    [SerializeField] private float _speedAttackMoveMod = 2f;
-    [SerializeField] private GameObject _attackSector;
-    [SerializeField] private Blaster _weapon;
-    
-
-    private Rigidbody _rigidBody;
-    private Animator _animator;
-
-    private bool _isMoving = false;
-    private bool _isFire = false;
-    private Vector3 _attackDirection;
-    private ValueWrapper<bool> _isAttackRotateEnded = new ValueWrapper<bool>(false);
-
+    [SerializeField] Blaster _weapon;
+    // IWeapon instead
 
     public IJoystiсk MoveJoystick { get; set; }
     public IJoystiсk ShootJoystick { get; set; }
@@ -37,112 +23,70 @@ public class Player : MonoBehaviour
         EventAggregator.Subscribe<OnRotationBeforeAttackEndedEvent>(OnRotationBeforeAttackEndedHandler);
         EventAggregator.Subscribe<AttackEndedEvent>(AttackEndedHandler);
 
-        
-        _attackSector.SetActive(false);
         _rigidBody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
 
-    } 
+    }
 
-    
+ 
     void Update()
     {
+        PlayerMoveControll(MoveJoystick.Direction);
 
-        PlayerInputControll();
-
-        ShootingSeсtorControll();
-
-
-
+        ShootingSeсtorControll(_attackSector.transform, _angularAttackSpeed, ShootJoystick.Direction);
     }
 
     private void FixedUpdate()
     {
-        if (!_isFire)
-        {
-            MoveUtility.NoAttackMoveMod(_rigidBody, _isMoving, _speedNoAttackMoveMod);
-        }
-
-        else if (_isFire) {
-
-            MoveUtility.AttackMoveMod(_rigidBody, _animator, MoveJoystick, _isMoving, _speedAttackMoveMod);
-            MoveUtility.RotateForAttack(transform, _angularSpeed, _attackDirection,_isAttackRotateEnded);
-            
-        }
-
+        PlayerDOMove(MoveJoystick.Direction);
     }
 
-
-    public bool ChangeFireStatus(bool attack)
+    private void PlayerDOMove(Vector3 direction)
     {
-        return _isFire = attack;
+        DOMove(direction);
+    }  
+
+    private void PlayerMoveControll(Vector3 direction)
+    {
+        MoveControll(direction);
     }
 
-
-    
-
-    private void PlayerInputControll()
+    private void ShootingSeсtorControll(Transform transform, float angularAttackSpeed, Vector3 attackJoysticDirection )
     {
-        if (Vector3.Magnitude(MoveJoystick.Direction) > 0)
-        {
-            _isMoving = true;
-
-            if (!_isFire)
-            {
-                _animator.SetFloat("Speed", 100f);
-                MoveUtility.Rotate(transform, _angularAttackSpeed, MoveJoystick.Direction);
-            }
-        }
-
-        else if (MoveJoystick.Direction == Vector3.zero && !_isFire)
-        {
-            _isMoving = false;
-            _animator.SetFloat("Speed", 0);
-
-        }
-    }
-
-    private void ShootingSeсtorControll()
-    {
-        MoveUtility.Rotate(_attackSector.transform, _angularAttackSpeed, ShootJoystick.Direction);
-    }
-
-    private void Attack()
-    {
-        _weapon.Attack();
+        MoveUtility.Rotate(transform, angularAttackSpeed, attackJoysticDirection);
     }
 
 
     #region EventHandlers
     private void OnDragAttackJoystickHandler(object sender, OnDragAttackJoystickEvent onDragAttackJoystickEvent)
     {
-        _attackSector.SetActive(true);
+        _attackSector.gameObject.SetActive(true);
     }
 
     private void OnEndDragAttackJoystickHandler(object sender, OnEndDragAttackJoystickEvent onEndDragAttackJoystickEvent)
     {
-        
         _attackDirection = onEndDragAttackJoystickEvent.Direction;
-        _attackSector.SetActive(false);
-        
+        _attackSector.gameObject.SetActive(false);
         _animator.SetBool("isFire", ChangeFireStatus(true));
-
-
     }
 
-    private void OnRotationBeforeAttackEndedHandler(object sender, OnRotationBeforeAttackEndedEvent onRotationBeforeAttackEndedEvent)
-    {
-        Attack();
-    }
-    private void AttackEndedHandler(object sender, AttackEndedEvent onRotationBeforeAttackEndedEvent)
-    {
-        if (_weapon == sender as Blaster) {
-            Debug.Log("Weapon from sender attack endded");
-            ChangeFireStatus(false);
-            _isAttackRotateEnded.Value = false;
-            _animator.SetBool("isFire", ChangeFireStatus(false));
-        }
-    }
+    //private void OnRotationBeforeAttackEndedHandler(object sender, OnRotationBeforeAttackEndedEvent onRotationBeforeAttackEndedEvent)
+    //{
+    //    if (transform == sender as Transform)
+    //        Attack();
+    //}
+    //private void AttackEndedHandler(object sender, AttackEndedEvent onRotationBeforeAttackEndedEvent)
+    //{
+    //    if (Weapon == sender as IWeapon)
+    //    {
+    //        //Debug.Log("Weapon from sender attack endded");
+    //        ChangeFireStatus(false);
+    //        _isAttackRotateEnded.Value = false;
+    //        _animator.SetBool("isFire", ChangeFireStatus(false));
+    //    }
+    //}
+
     #endregion
+
 }
 

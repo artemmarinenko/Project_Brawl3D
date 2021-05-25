@@ -13,12 +13,10 @@ public class ValueWrapper<T> where T : struct
 
 public static class MoveUtility 
 {
-   
     public static void NoAttackMoveMod(Rigidbody rigidbody,bool IsMoving,float speed)
     {
         if (IsMoving)
         {
-            
             rigidbody.velocity = rigidbody.transform.forward * speed;
         }
         else
@@ -28,13 +26,13 @@ public static class MoveUtility
         }
     }
 
-    public static void AttackMoveMod(Rigidbody rigidbody,Animator animator, IJoystiсk MoveJoystick, bool IsMoving, float speed)
+    public static void AttackMoveMod(Rigidbody rigidbody, Animator animator, Vector3 direction, bool IsMoving, float speed)
     {
         if (IsMoving)
         { 
-            rigidbody.velocity = new Vector3(MoveJoystick.Direction.x, MoveJoystick.Direction.z, MoveJoystick.Direction.y) * speed;
-            animator.SetFloat("VelocityX", MoveJoystick.Direction.x);
-            animator.SetFloat("VelocityZ", MoveJoystick.Direction.y);
+            rigidbody.velocity = new Vector3(direction.x, direction.z, direction.y) * speed;
+            animator.SetFloat("VelocityX", direction.x);
+            animator.SetFloat("VelocityZ", direction.y);
         }
         else
         {
@@ -44,7 +42,6 @@ public static class MoveUtility
     }
 
 
-    
     public static void Rotate(Transform transform, float angularSpeed, Vector3 direction)
     {
         Vector3 joystickDirection = new Vector3(direction.x, direction.z, direction.y);
@@ -66,7 +63,10 @@ public static class MoveUtility
         {
             isRotateEnded.Value = true;
             transform.forward = new Vector3(direction.x, direction.z, direction.y);
-            EventAggregator.Post(transform.gameObject, new OnRotationBeforeAttackEndedEvent() { });
+            EventAggregator.Post(transform, new OnRotationBeforeAttackEndedEvent() { });
         }
     }
+
+
+
 }

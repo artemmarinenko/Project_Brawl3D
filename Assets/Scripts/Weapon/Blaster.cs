@@ -23,7 +23,7 @@ public class Blaster : MonoBehaviour, IWeapon
     //private bool _isFireEnded = true;
     private float _time;
 
-    public static int Counter = 0;
+    
 
  
     void Update()
@@ -35,7 +35,6 @@ public class Blaster : MonoBehaviour, IWeapon
 
         if (_isFire)
         {
-
             ShootLaserBeams();
         }
     }
@@ -45,7 +44,6 @@ public class Blaster : MonoBehaviour, IWeapon
 
         for (float i = _angleFromMiddleBeam; i < Mathf.Abs(_angleFromMiddleBeam); i += _angleStep)
         {
-
             _laserBeams.Add(Instantiate(_laserBeamPrefab, _startPoint.transform.position, Quaternion.Euler(NintyDegrees, _startPoint.transform.rotation.eulerAngles.y + i, _startPoint.transform.rotation.eulerAngles.z)));
             _endPoints.Add(_startPoint.transform.position + (Quaternion.Euler(ZeroDegrees, ZeroDegrees + i, ZeroDegrees) * _startPoint.transform.forward * _fireDistance));
         }

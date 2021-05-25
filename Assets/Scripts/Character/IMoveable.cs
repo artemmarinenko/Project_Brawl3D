@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IMoveable 
 {
-    void MoveControll();
-    void DOMove();
+    void MoveControll(Vector3 direction);
+    void DOMove(Vector3 direction);
 }
