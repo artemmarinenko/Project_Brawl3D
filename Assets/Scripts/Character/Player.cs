@@ -6,9 +6,10 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Player : Character
 {
-    [SerializeField] Blaster _weapon;
+    //[SerializeField] Blaster _weapon;
     // IWeapon instead
 
     public IJoystiсk MoveJoystick { get; set; }

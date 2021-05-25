@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Blaster : MonoBehaviour, IWeapon
+public class MultiShotBlaster : MonoBehaviour, IWeapon
 {
     private const float NintyDegrees = 90f;
     private const float ZeroDegrees = 0f;

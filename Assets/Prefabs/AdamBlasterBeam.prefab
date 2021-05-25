@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3051777432025982560}
   - component: {fileID: 3051777432032476520}
   m_Layer: 0
-  m_Name: SingleLine-LightSaber
+  m_Name: AdamBlasterBeam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
