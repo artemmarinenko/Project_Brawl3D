@@ -12,9 +12,12 @@ public class CameraFollow : MonoBehaviour
     void LateUpdate()
     { 
         //new Vector3(transform.position.x, transform.position.y, _followedObject.position.z - _zCoordinateOffset);
-        Vector3 position = transform.position;
-        position.z = Mathf.Lerp(transform.position.z, FollowedObject.position.z - _zCoordinateOffset, _interpolationSpeed * Time.deltaTime);
-        transform.position = position;
+        if(FollowedObject != null) {
+            Vector3 position = transform.position;
+            position.z = Mathf.Lerp(transform.position.z, FollowedObject.position.z - _zCoordinateOffset, _interpolationSpeed * Time.deltaTime);
+            transform.position = position;
+        }
+        
 
     }
 }

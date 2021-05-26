@@ -4,19 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+
 public class Bot : Character
 {
     private NavMeshAgent _agent;
     
     private Transform _player;
-    //public Transform Player { get { return _player; } set { _player = Player;  } }
 
     [SerializeField] private Camera _camera;
-
+    [SerializeField] private LayerMask _layermask;
 
     private float walkPointRange = 2f;
     private Vector3 walkPoint;
-    [SerializeField ]LayerMask layermask;
+    
 
 
     private bool _walkPointSearched;
@@ -27,6 +27,19 @@ public class Bot : Character
     public void  SetPlayer(Transform playerTransform)
     {
         _player = playerTransform;
+    }
+
+    public void SetLayerMask(LayerMask layerMask)
+    {
+        _layermask = layerMask;
+    }
+
+    private void OnDestroy()
+    {
+        EventAggregator.UnSubscribe<OnRotationBeforeAttackEndedEvent>(OnRotationBeforeAttackEndedHandler);
+        EventAggregator.UnSubscribe<AttackEndedEvent>(AttackEndedHandler);
+
+        EventAggregator.Post(null, new BotKilledEvent() { CharacterType = _charType, Layer = gameObject.layer, AttackLayer = _layermask});
     }
     void Awake()
     {
@@ -43,12 +56,13 @@ public class Bot : Character
     // Update is called once per frame
     void Update()
     {
-        _playerInSightRange = Physics.CheckSphere(transform.position, 7, layermask);
+        _playerInSightRange = Physics.CheckSphere(transform.position, 5, _layermask);
         
         
-        if (_playerInSightRange) {
-            //Attack();
-            lastPlayerPosition = _player.position;
+        if (_playerInSightRange && _player != null) {
+            
+                lastPlayerPosition = _player.position;
+                
             }
         
         MoveControll(lastPlayerPosition);
@@ -57,7 +71,16 @@ public class Bot : Character
                 Attack();
                 ChangeFireStatus(true); }
         }
-        if(_agent.remainingDistance<= 1)
+
+        if (_agent.remainingDistance >= 0.5 && _agent.remainingDistance <= 1)
+        {
+            if (!_isFire)
+            {
+                Attack();
+                ChangeFireStatus(true);
+            }
+        }
+        if (_agent.remainingDistance<= 1)
         {
             _agent.isStopped = true;
             _animator.SetFloat("Speed", 0);
@@ -66,7 +89,8 @@ public class Bot : Character
     }
     private void FixedUpdate()
     {
-        DOMove((transform.position - _player.position).normalized);
+        if(_player != null)
+            DOMove((transform.position - _player.position).normalized);
     }
 
 

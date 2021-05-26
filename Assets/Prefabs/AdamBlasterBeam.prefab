@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3051777432033627274}
   - component: {fileID: 3051777432025982560}
   - component: {fileID: 3051777432032476520}
+  - component: {fileID: 3751571968211521590}
   m_Layer: 0
   m_Name: AdamBlasterBeam
   m_TagString: Untagged
@@ -108,8 +109,20 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3051777432032420478}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 12.118227, y: 104.21501, z: 3.595022}
   m_Center: {x: -0.008643791, y: 51.807514, z: -0.46452704}
+--- !u!114 &3751571968211521590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3051777432032420478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20040a8058d7189459b367fa7a28929b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

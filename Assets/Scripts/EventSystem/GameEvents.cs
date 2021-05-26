@@ -12,4 +12,7 @@ namespace GameEvents
     public class OnRotationBeforeAttackEndedEvent { };
     public class AttackEndedEvent { }
 
+    public class PlayerKilledEvent { };
+    public class BotKilledEvent { public CharacterType CharacterType; public int Layer; public LayerMask AttackLayer; };
+
 }

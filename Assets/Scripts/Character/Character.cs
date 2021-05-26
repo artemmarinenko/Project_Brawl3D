@@ -2,7 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+public enum CharacterType {
+            Adam,
+            Eva
+    }
 public class Character : MonoBehaviour, IMoveable, IAttackable
 {
     [SerializeField] protected float _angularSpeed = 20f;
@@ -10,6 +14,12 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
     [SerializeField] protected float _speedNoAttackMoveMod = 3f;
     [SerializeField] protected float _speedAttackMoveMod = 2f;
     [SerializeField] protected AttackSector _attackSector;
+    [SerializeField] protected Slider _hpSlider;
+    [SerializeField] protected CharacterType _charType;
+    
+
+    protected float _hp = 100;
+
     protected Rigidbody _rigidBody;
     protected bool _isMoving = false;
     protected bool _isFire = false;
@@ -21,10 +31,11 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
 
     public IWeapon Weapon { get; set; }
 
- 
-
+    
+    
     private void Awake()
     {
+        
         EventAggregator.Subscribe<OnRotationBeforeAttackEndedEvent>(OnRotationBeforeAttackEndedHandler);
         EventAggregator.Subscribe<AttackEndedEvent>(AttackEndedHandler);
 
@@ -78,6 +89,22 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
         Weapon.Attack();
     }
 
+    public virtual void RecieveDamage(float damage)
+    {
+        if (_hp - damage >= 0) {
+
+            _hp -= damage;
+            _hpSlider.value = _hpSlider.value - (damage / 100);
+        }
+        else
+        {
+
+            Destroy(gameObject);           
+        }          
+    }
+
+    
+
     #region EventHandlers
     protected virtual void OnRotationBeforeAttackEndedHandler(object sender, OnRotationBeforeAttackEndedEvent onRotationBeforeAttackEndedEvent)
     {
@@ -94,8 +121,6 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
             _animator.SetBool("isFire", ChangeFireStatus(false));
         }
     }
-
-
 
     #endregion
 }

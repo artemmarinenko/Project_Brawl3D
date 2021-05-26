@@ -15,7 +15,16 @@ public class Player : Character
     public IJoystiсk MoveJoystick { get; set; }
     public IJoystiсk ShootJoystick { get; set; }
 
-    
+    private void OnDestroy()
+    {
+        EventAggregator.UnSubscribe<OnDragAttackJoystickEvent>(OnDragAttackJoystickHandler);
+        EventAggregator.UnSubscribe<OnEndDragAttackJoystickEvent>(OnEndDragAttackJoystickHandler);
+        EventAggregator.UnSubscribe<OnRotationBeforeAttackEndedEvent>(OnRotationBeforeAttackEndedHandler);
+        EventAggregator.UnSubscribe<AttackEndedEvent>(AttackEndedHandler);
+
+        //Debug.Log("Player Destroyed");
+        EventAggregator.Post(null, new PlayerKilledEvent());
+    }
 
     void Awake()
     {
