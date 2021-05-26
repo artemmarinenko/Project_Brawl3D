@@ -20,7 +20,7 @@ public class MultiShotBlaster : MonoBehaviour, IWeapon
     private List<Vector3> _endPoints = new List<Vector3>();
 
     private bool _isFire = false;
-    //private bool _isFireEnded = true;
+    private bool _isFireEnded = true;
     private float _time;
 
     
@@ -28,19 +28,17 @@ public class MultiShotBlaster : MonoBehaviour, IWeapon
  
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            PrepareLaserBeams();
-        }
+        
 
-        if (_isFire)
+        if (_isFire )
         {
+
             ShootLaserBeams();
         }
     }
 
     private void PrepareLaserBeams() {
-        //_isFireEnded = false;
+       // _isFireEnded = false;
 
         for (float i = _angleFromMiddleBeam; i < Mathf.Abs(_angleFromMiddleBeam); i += _angleStep)
         {

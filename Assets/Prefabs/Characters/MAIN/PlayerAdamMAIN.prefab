@@ -17,7 +17,6 @@ MonoBehaviour:
   _speedNoAttackMoveMod: 3
   _speedAttackMoveMod: 2
   _attackSector: {fileID: 1961521730424848539}
-  _weapon: {fileID: 3224204350370340770}
 --- !u!114 &1517774656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,7 +44,7 @@ PrefabInstance:
     - target: {fileID: 6167476585300116010, guid: a43f546b68127154c885e83e2377833d,
         type: 3}
       propertyPath: m_Name
-      value: PlayerAdam Variant
+      value: PlayerAdamMAIN
       objectReference: {fileID: 0}
     - target: {fileID: 6167476585300116010, guid: a43f546b68127154c885e83e2377833d,
         type: 3}
@@ -116,18 +115,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8730893393125145833}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3224204350370340770 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6166819383274414923, guid: a43f546b68127154c885e83e2377833d,
-    type: 3}
-  m_PrefabInstance: {fileID: 8730893393125145833}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a51430c880e512248822d2eaa3b2c33e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3224204351200778812 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6166819382930450133, guid: a43f546b68127154c885e83e2377833d,

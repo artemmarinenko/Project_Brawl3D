@@ -24,9 +24,10 @@ public class Player : Character
         EventAggregator.Subscribe<OnRotationBeforeAttackEndedEvent>(OnRotationBeforeAttackEndedHandler);
         EventAggregator.Subscribe<AttackEndedEvent>(AttackEndedHandler);
 
+        _attackSector.gameObject.SetActive(false);
         _rigidBody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
-
+        
     }
 
  

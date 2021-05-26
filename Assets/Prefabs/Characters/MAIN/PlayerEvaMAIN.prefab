@@ -30,6 +30,18 @@ Transform:
   m_Father: {fileID: 6737688340779218951}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 180, y: 180, z: 0.84}
+--- !u!225 &781936355764502441
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5982012389647199803}
+  m_Enabled: 1
+  m_Alpha: 0.6
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &3170207721818265062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,7 +134,7 @@ PrefabInstance:
     - target: {fileID: 3907313103037775928, guid: 0c42b96b18a6e994491646319abb7ce5,
         type: 3}
       propertyPath: m_Name
-      value: PlayerEva Variant 1
+      value: PlayerEvaMAIN
       objectReference: {fileID: 0}
     - target: {fileID: 3907313103037775928, guid: 0c42b96b18a6e994491646319abb7ce5,
         type: 3}
@@ -154,7 +166,44 @@ PrefabInstance:
       propertyPath: _startPoint
       value: 
       objectReference: {fileID: 3130579613359284283}
-    m_RemovedComponents: []
+    - target: {fileID: 4082892136723935876, guid: 0c42b96b18a6e994491646319abb7ce5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082892137839614796, guid: 0c42b96b18a6e994491646319abb7ce5,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8dfb3eb18eb11bb42a8b5798b49e3372,
+        type: 3}
+    - target: {fileID: 4082892137839614796, guid: 0c42b96b18a6e994491646319abb7ce5,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082892137839614796, guid: 0c42b96b18a6e994491646319abb7ce5,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082892137839614796, guid: 0c42b96b18a6e994491646319abb7ce5,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082892137839614797, guid: 0c42b96b18a6e994491646319abb7ce5,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082892137839614797, guid: 0c42b96b18a6e994491646319abb7ce5,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 4082892137190684792, guid: 0c42b96b18a6e994491646319abb7ce5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 0c42b96b18a6e994491646319abb7ce5, type: 3}
 --- !u!4 &6737688340779218951 stripped
 Transform:
@@ -165,6 +214,12 @@ Transform:
 --- !u!4 &6737488308207828063 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3903888311308083424, guid: 0c42b96b18a6e994491646319abb7ce5,
+    type: 3}
+  m_PrefabInstance: {fileID: 7758919680135421119}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5982012389647199803 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4082892136723935876, guid: 0c42b96b18a6e994491646319abb7ce5,
     type: 3}
   m_PrefabInstance: {fileID: 7758919680135421119}
   m_PrefabAsset: {fileID: 0}

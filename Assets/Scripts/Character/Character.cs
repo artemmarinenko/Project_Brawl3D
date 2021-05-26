@@ -28,12 +28,12 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
         EventAggregator.Subscribe<OnRotationBeforeAttackEndedEvent>(OnRotationBeforeAttackEndedHandler);
         EventAggregator.Subscribe<AttackEndedEvent>(AttackEndedHandler);
 
-        GetComponentInChildren<AttackSector>().gameObject.SetActive(false);
+        _attackSector.gameObject.SetActive(false);
         _rigidBody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
     }
 
-    public void MoveControll(Vector3 direction)
+    public virtual void MoveControll(Vector3 direction)
     {
         if (Vector3.Magnitude(direction) > 0)
         {
@@ -53,7 +53,7 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
 
         }
     }
-    public void DOMove(Vector3 direction)
+    public virtual void DOMove(Vector3 direction)
     {
         if (!_isFire)
         {
@@ -73,18 +73,18 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
     {
         return _isFire = attack;
     }
-    public void Attack()
+    public virtual  void Attack()
     {
         Weapon.Attack();
     }
 
     #region EventHandlers
-    protected void OnRotationBeforeAttackEndedHandler(object sender, OnRotationBeforeAttackEndedEvent onRotationBeforeAttackEndedEvent)
+    protected virtual void OnRotationBeforeAttackEndedHandler(object sender, OnRotationBeforeAttackEndedEvent onRotationBeforeAttackEndedEvent)
     {
         if (transform == sender as Transform)
             Attack();
     }
-    protected void AttackEndedHandler(object sender, AttackEndedEvent onRotationBeforeAttackEndedEvent)
+    protected virtual void AttackEndedHandler(object sender, AttackEndedEvent onRotationBeforeAttackEndedEvent)
     {
         if (Weapon == sender as IWeapon)
         {
