@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Linq;
 
 
 public class Bot : Character
@@ -13,9 +14,10 @@ public class Bot : Character
 
     [SerializeField] private Camera _camera;
     [SerializeField] private LayerMask _layermask;
+    [SerializeField] private LayerMask _crystals;
 
-    private float walkPointRange = 2f;
-    private Vector3 walkPoint;
+    private float _walkPointRange = 2f;
+    private Vector3 _walkPoint;
     
 
 
@@ -56,35 +58,30 @@ public class Bot : Character
     // Update is called once per frame
     void Update()
     {
-        _playerInSightRange = Physics.CheckSphere(transform.position, 5, _layermask);
-        
-        
-        if (_playerInSightRange && _player != null) {
-            
-                lastPlayerPosition = _player.position;
-                
+        Collider[] crystals = Physics.OverlapSphere(transform.position, 50, _crystals);
+
+        if (crystals.Length > 0)
+        {
+            _agent.SetDestination(FindNearestCrystal(crystals).position);
+            _animator.SetFloat("Speed", 100);
+            if (_player != null) {
+                if ((Vector3.Distance(transform.position, _player.transform.position) < 4) && !_isFire)
+                {
+                    Attack();
+                    ChangeFireStatus(true);
+                }
             }
+            
+
+            //_animator.SetFloat("Speed", 0);
+        }
         
-        MoveControll(lastPlayerPosition);
-        if(_agent.remainingDistance >= 3.5 && _agent.remainingDistance <= 4) { 
-            if (!_isFire) { 
-                Attack();
-                ChangeFireStatus(true); }
+
+        else {
+            SearchAndAttackPlayer();
         }
 
-        if (_agent.remainingDistance >= 0.5 && _agent.remainingDistance <= 1)
-        {
-            if (!_isFire)
-            {
-                Attack();
-                ChangeFireStatus(true);
-            }
-        }
-        if (_agent.remainingDistance<= 1)
-        {
-            _agent.isStopped = true;
-            _animator.SetFloat("Speed", 0);
-        }
+       
 
     }
     private void FixedUpdate()
@@ -97,14 +94,50 @@ public class Bot : Character
     private void SearchWalkPoint()
     {
         //Calculate random point in range
-        float randomZ = Random.Range(-walkPointRange, walkPointRange);
-        float randomX = Random.Range(-walkPointRange, walkPointRange);
+        float randomZ = Random.Range(-_walkPointRange, _walkPointRange);
+        float randomX = Random.Range(-_walkPointRange, _walkPointRange);
 
-        walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
+        _walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
         _walkPointSearched = true;
     }
 
-    
+    private Transform FindNearestCrystal(Collider[] colliders)
+    {
+        return colliders.OrderBy(t => Vector3.Distance(transform.position, t.gameObject.transform.position)).FirstOrDefault().gameObject.transform;
+    }
+
+    private void SearchAndAttackPlayer() {
+        _playerInSightRange = Physics.CheckSphere(transform.position, 5, _layermask);
+
+        if (_playerInSightRange && _player != null)
+        {
+            lastPlayerPosition = _player.position;
+        }
+
+        MoveControll(lastPlayerPosition);
+        if (_agent.remainingDistance >= 3.5 && _agent.remainingDistance <= 4)
+        {
+            if (!_isFire)
+            {
+                Attack();
+                ChangeFireStatus(true);
+            }
+        }
+
+        if (_agent.remainingDistance >= 0.5 && _agent.remainingDistance <= 1)
+        {
+            if (!_isFire)
+            {
+                Attack();
+                ChangeFireStatus(true);
+            }
+        }
+        if (_agent.remainingDistance <= 1)
+        {
+            _agent.isStopped = true;
+            _animator.SetFloat("Speed", 0);
+        }
+    }
 
     protected override void AttackEndedHandler(object sender, AttackEndedEvent onRotationBeforeAttackEndedEvent)
     {
@@ -116,6 +149,8 @@ public class Bot : Character
             _animator.SetBool("isFire", ChangeFireStatus(false));
         }
     }
+
+
 
     public override void MoveControll(Vector3 position) {
 

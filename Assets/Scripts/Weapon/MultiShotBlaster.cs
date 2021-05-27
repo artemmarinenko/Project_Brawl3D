@@ -23,9 +23,17 @@ public class MultiShotBlaster : MonoBehaviour, IWeapon
     //private bool _isFireEnded = true;
     private float _time;
 
-    
+    private void OnDestroy()
+    {
+        foreach (GameObject beam in _laserBeams)
+        {
+            Destroy(beam);
+        }
+        _endPoints.Clear();
+        _laserBeams.Clear();
+    }
 
- 
+
     void Update()
     {
         if (_isFire )

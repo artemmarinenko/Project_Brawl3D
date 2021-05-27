@@ -2,9 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public const int PlayerLayer = 8;
+    public const int BotLayer = 9;
+    [SerializeField] private int _scoreToWin = 15;
+
+    [SerializeField] private LayerMask _botTeamAttackMask;
+    [SerializeField] private LayerMask _playerTeamAttackMask;
+
     [SerializeField] private MoveJoystick _moveJoystick;
     [SerializeField] private AttackJoystick _shootJoystick;
 
@@ -16,18 +24,37 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Bot _botEvaPrefab;
 
     [SerializeField] private Transform _startPlayerPosition;
-    [SerializeField] private Transform _startBotPosition;
+    [SerializeField] private Transform _startBotAdamPosition;
+    [SerializeField] private Transform _startBotEvaPosition;
 
-    Bot currentBot;
+    [SerializeField] private Transform _startAllyPosition;
+
+    [SerializeField] private Text _playerTeamScore;
+    [SerializeField] private Text _botTeamScore;
+
+    private static int PlayerTeamScore = 0;
+    private static int BotTeamScore = 0;
+
+
+    Bot currentBotAdam;
+    Bot currentBotEva;
+    Bot currentAlly;
     Player currentPlayer;
+
 
     void Awake()
     {
         EventAggregator.Subscribe<PlayerKilledEvent>(OnPlayerKilledEventHandler);
         EventAggregator.Subscribe<BotKilledEvent>(OnBotKilledEventHandler);
+        EventAggregator.Subscribe<CrystallAddedEvent>(OnCrystallAddedEventHandler);
 
         currentPlayer = CreatePlayer(BuildEvaPlayer(_playerEvaPrefab));
-        currentBot = BuildBotAdam(_botAdamPrefab, _startBotPosition, currentPlayer.transform, 9, LayerMask.GetMask(new string[] { "PlayerTeam" }));
+
+        currentBotAdam = BuildBotAdam(_botAdamPrefab, _startBotAdamPosition, currentPlayer.transform, BotLayer, _botTeamAttackMask);
+        
+        currentBotEva = BuildBotEva(_botEvaPrefab, _startBotEvaPosition, currentPlayer.transform, BotLayer, _botTeamAttackMask);
+        
+        currentAlly = BuildBotAdam(_botAdamPrefab, _startAllyPosition, currentBotAdam.transform, PlayerLayer, _playerTeamAttackMask);
         
     }
 
@@ -40,11 +67,11 @@ public class GameManager : MonoBehaviour
         return PlayerCharacter;
     }
 
-    public void Restart()
+    public void RespawnPlayer()
     {
-
         currentPlayer = CreatePlayer(BuildEvaPlayer(_playerEvaPrefab));
-        currentBot.SetPlayer(currentPlayer.transform);
+        currentBotAdam.SetPlayer(currentPlayer.transform);
+        currentBotEva.SetPlayer(currentPlayer.transform);
     }
     
     public void DeleteCamaraReference()
@@ -92,18 +119,93 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerKilledEventHandler(object sender, PlayerKilledEvent playerKilledEvent)
     {
-        DeleteCamaraReference();       
-        Restart();
+        DeleteCamaraReference();
+        RespawnPlayer();
+    }
+
+    public void Restart()
+    {
+        DeleteCamaraReference();
+        Destroy(currentBotAdam.gameObject);
+        Destroy(currentBotEva.gameObject);
+        Destroy(currentAlly.gameObject);
+        Destroy(currentPlayer.gameObject);
+        
+
+
+        //currentPlayer = CreatePlayer(BuildEvaPlayer(_playerEvaPrefab));
+
+        //currentBotAdam = BuildBotAdam(_botAdamPrefab, _startBotAdamPosition, currentPlayer.transform, BotLayer, _botTeamAttackMask);
+
+        //currentBotEva = BuildBotEva(_botEvaPrefab, _startBotEvaPosition, currentPlayer.transform, BotLayer, _botTeamAttackMask);
+
+        //currentAlly = BuildBotAdam(_botAdamPrefab, _startAllyPosition, currentBotAdam.transform, PlayerLayer, _playerTeamAttackMask);
+
+    }
+
+    private void OnCrystallAddedEventHandler(object sender, CrystallAddedEvent crystalAddedEvent)
+    {
+       if((sender as Character).gameObject.layer == PlayerLayer)
+        {
+            Debug.Log("Player");
+            PlayerTeamScore += crystalAddedEvent.CrystalAmount;
+            _playerTeamScore.text = PlayerTeamScore.ToString();
+
+            if(PlayerTeamScore == _scoreToWin)
+            {
+                
+                Restart();
+            }
+
+        }
+        else if ((sender as Character).gameObject.layer == BotLayer)
+        {
+            Debug.Log("Bot");
+            BotTeamScore += crystalAddedEvent.CrystalAmount;
+            _botTeamScore.text = BotTeamScore.ToString();
+
+            if (PlayerTeamScore == _scoreToWin)
+            {
+               
+                Restart();
+            }
+
+        }
+
     }
 
 
     private void OnBotKilledEventHandler(object sender, BotKilledEvent botKilledEvent)
     {
-        Debug.Log(botKilledEvent.AttackLayer.value);
 
-        if (botKilledEvent.CharacterType == CharacterType.Adam) 
-            currentBot = BuildBotAdam(_botAdamPrefab, _startBotPosition, currentPlayer.transform, botKilledEvent.Layer, botKilledEvent.AttackLayer);
-        if(botKilledEvent.CharacterType == CharacterType.Eva)
-            currentBot = BuildBotAdam(_botEvaPrefab, _startBotPosition, currentPlayer.transform, botKilledEvent.Layer, botKilledEvent.AttackLayer);
+        if (botKilledEvent.CharacterType == CharacterType.Adam && botKilledEvent.Layer % 32 != PlayerLayer)
+        {
+            currentBotAdam = BuildBotAdam(_botAdamPrefab, _startBotAdamPosition, currentPlayer.transform, PlayerLayer, botKilledEvent.AttackLayer);
+            //currentBotAdam.GetComponent<MeshRenderer>().material.color = Color.red;
+        }
+            
+
+        else if(botKilledEvent.CharacterType == CharacterType.Adam && botKilledEvent.Layer % 32 == PlayerLayer)
+        {
+            currentAlly = BuildBotAdam(_botAdamPrefab, _startAllyPosition, currentPlayer.transform, BotLayer, botKilledEvent.AttackLayer);
+            //currentAlly.GetComponent<MeshRenderer>().material.color = Color.white;
+        }
+            
+
+
+        if (botKilledEvent.CharacterType == CharacterType.Eva && botKilledEvent.Layer % 32 != PlayerLayer)
+        {
+            currentBotEva = BuildBotEva(_botEvaPrefab, _startBotEvaPosition, currentPlayer.transform, PlayerLayer, botKilledEvent.AttackLayer);
+            //currentBotEva.GetComponent<MeshRenderer>().material.color = Color.red;
+        }
+            
+
+        else if(botKilledEvent.CharacterType == CharacterType.Eva && botKilledEvent.Layer % 32 == PlayerLayer)
+        {
+            currentAlly = BuildBotEva(_botEvaPrefab, _startAllyPosition, currentPlayer.transform, BotLayer, botKilledEvent.AttackLayer);
+            //currentAlly.GetComponent<MeshRenderer>().material.color = Color.white;
+        }
     }
-}
+            
+    }
+

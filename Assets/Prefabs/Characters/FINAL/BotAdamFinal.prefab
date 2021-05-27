@@ -696,12 +696,17 @@ MonoBehaviour:
   _angularAttackSpeed: 40
   _speedNoAttackMoveMod: 2
   _speedAttackMoveMod: 0.3
+  _initialHP: 100
   _attackSector: {fileID: 2792082319043437069}
   _hpSlider: {fileID: 6345178596606385818}
+  _charType: 0
   _camera: {fileID: 0}
-  layermask:
+  _layermask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
+  _crystals:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!195 &4948783931547852410
 NavMeshAgent:
   m_ObjectHideFlags: 0

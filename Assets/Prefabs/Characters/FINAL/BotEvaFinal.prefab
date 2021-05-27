@@ -2454,12 +2454,17 @@ MonoBehaviour:
   _angularAttackSpeed: 40
   _speedNoAttackMoveMod: 2
   _speedAttackMoveMod: 0.3
+  _initialHP: 100
   _attackSector: {fileID: 3696150322201645979}
   _hpSlider: {fileID: 5619013909678616332}
+  _charType: 1
   _camera: {fileID: 0}
-  layermask:
+  _layermask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
+  _crystals:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!195 &5861920855733301228
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3092,7 +3097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c45b20856329464f83e7224041bfdff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startPoint: {fileID: 0}
+  _startPoint: {fileID: 346012443499658834}
   _laserBeamPrefab: {fileID: 3051777432032420478, guid: fad5edd8e1434e648a251671e6f5bc48,
     type: 3}
   _fireDistance: 10

@@ -14,5 +14,6 @@ namespace GameEvents
 
     public class PlayerKilledEvent { };
     public class BotKilledEvent { public CharacterType CharacterType; public int Layer; public LayerMask AttackLayer; };
+    public class CrystallAddedEvent { public int CrystalAmount; }
 
 }

@@ -21,8 +21,11 @@ public class OneShotBlaster : MonoBehaviour, IWeapon
 
     private Vector3 _endPoint;
     private GameObject _bigLaserBeam;
-    
 
+    private void OnDestroy()
+    {
+        Destroy(_bigLaserBeam);
+    }
 
     void Update()
     {

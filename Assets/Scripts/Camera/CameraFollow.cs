@@ -17,7 +17,6 @@ public class CameraFollow : MonoBehaviour
             position.z = Mathf.Lerp(transform.position.z, FollowedObject.position.z - _zCoordinateOffset, _interpolationSpeed * Time.deltaTime);
             transform.position = position;
         }
-        
 
     }
 }

@@ -13,25 +13,33 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
     [SerializeField] protected float _angularAttackSpeed = 40f;
     [SerializeField] protected float _speedNoAttackMoveMod = 3f;
     [SerializeField] protected float _speedAttackMoveMod = 2f;
+    [SerializeField] protected float _initialHP = 100;
+
     [SerializeField] protected AttackSector _attackSector;
     [SerializeField] protected Slider _hpSlider;
     [SerializeField] protected CharacterType _charType;
-    
 
+    private int _crystalInPack = 0;
     protected float _hp = 100;
 
+    public int CrystalsInPack {
+        get  {return _crystalInPack; }
+
+        set {
+            Debug.Log(value);
+            
+            EventAggregator.Post(this, new CrystallAddedEvent() { CrystalAmount = value });
+        }}
+
+    protected Vector3 _attackDirection;
+    protected Animator _animator;
     protected Rigidbody _rigidBody;
+
     protected bool _isMoving = false;
     protected bool _isFire = false;
     protected ValueWrapper<bool> _isAttackRotateEnded = new ValueWrapper<bool>(false);
 
-    protected Vector3 _attackDirection;
-    protected Animator _animator;
-    
-
-    public IWeapon Weapon { get; set; }
-
-    
+    public IWeapon Weapon { get; set; }  
     
     private void Awake()
     {
@@ -39,6 +47,7 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
         EventAggregator.Subscribe<OnRotationBeforeAttackEndedEvent>(OnRotationBeforeAttackEndedHandler);
         EventAggregator.Subscribe<AttackEndedEvent>(AttackEndedHandler);
 
+        _hp = _initialHP;
         _attackSector.gameObject.SetActive(false);
         _rigidBody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
@@ -92,13 +101,11 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
     public virtual void RecieveDamage(float damage)
     {
         if (_hp - damage >= 0) {
-
             _hp -= damage;
-            _hpSlider.value = _hpSlider.value - (damage / 100);
+            _hpSlider.value = _hpSlider.value - (damage / _initialHP);
         }
         else
         {
-
             Destroy(gameObject);           
         }          
     }
