@@ -16,7 +16,6 @@ public class OneShotBlaster : MonoBehaviour, IWeapon
     
 
     private bool _isFire = false;
-    //private bool _isFireEnded = true;
     private float _time;
 
     private Vector3 _endPoint;
@@ -38,8 +37,6 @@ public class OneShotBlaster : MonoBehaviour, IWeapon
 
     private void PrepareLaserBeams()
     {
-        //_isFireEnded = false;
-
         _bigLaserBeam = Instantiate(_laserBeamPrefab, _startPoint.transform.position, Quaternion.Euler(NintyDegrees, _startPoint.transform.rotation.eulerAngles.y, _startPoint.transform.rotation.eulerAngles.z));
         _endPoint = _startPoint.transform.position + ( _startPoint.transform.forward * _fireDistance);
     }
@@ -47,24 +44,20 @@ public class OneShotBlaster : MonoBehaviour, IWeapon
     private void ShootLaserBeams()
     {
             _bigLaserBeam.transform.position = Vector3.Lerp(_startPoint.transform.position, _endPoint, _time * _laserBeamSpeed);
-            //_laserBeams[i].transform.Translate(_endPoints[i]);
+           
         
         _time += Time.deltaTime;
         
             if (_bigLaserBeam.transform.position == _endPoint)
-            {
-                
+            {               
                  Destroy(_bigLaserBeam);
                 _endPoint = Vector3.zero;
                 
                 EventAggregator.Post(this, new AttackEndedEvent());
                 _isFire = false;
-                //_isFireEnded = true;
                 _time = 0;
                 return;
             }
-        
-
     }
 
     public void Attack()

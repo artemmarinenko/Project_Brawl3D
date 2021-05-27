@@ -20,7 +20,6 @@ public class MultiShotBlaster : MonoBehaviour, IWeapon
     private List<Vector3> _endPoints = new List<Vector3>();
 
     private bool _isFire = false;
-    //private bool _isFireEnded = true;
     private float _time;
 
     private void OnDestroy()
@@ -44,7 +43,6 @@ public class MultiShotBlaster : MonoBehaviour, IWeapon
     }
 
     private void PrepareLaserBeams() {
-       // _isFireEnded = false;
 
         for (float i = _angleFromMiddleBeam; i < Mathf.Abs(_angleFromMiddleBeam); i += _angleStep)
         {
@@ -60,7 +58,6 @@ public class MultiShotBlaster : MonoBehaviour, IWeapon
         for (int i = 0; i < _laserBeams.Count; i++)
         {
             _laserBeams[i].transform.position = Vector3.Lerp(_startPoint.transform.position, _endPoints[i], _time * _laserBeamSpeed);
-            //_laserBeams[i].transform.Translate(_endPoints[i]);
         }
         _time += Time.deltaTime;
         for(int i = 0; i < _laserBeams.Count; i++)
@@ -75,7 +72,6 @@ public class MultiShotBlaster : MonoBehaviour, IWeapon
                 _laserBeams.Clear();
                 EventAggregator.Post(this, new AttackEndedEvent());
                 _isFire = false;
-                //_isFireEnded = true;
                 _time = 0;
                 return;
             }

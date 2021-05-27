@@ -9,9 +9,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody))]
 public class Player : Character
 {
-    //[SerializeField] Blaster _weapon;
-    // IWeapon instead
-
     public IJoystiсk MoveJoystick { get; set; }
     public IJoystiсk ShootJoystick { get; set; }
 
@@ -21,8 +18,6 @@ public class Player : Character
         EventAggregator.UnSubscribe<OnEndDragAttackJoystickEvent>(OnEndDragAttackJoystickHandler);
         EventAggregator.UnSubscribe<OnRotationBeforeAttackEndedEvent>(OnRotationBeforeAttackEndedHandler);
         EventAggregator.UnSubscribe<AttackEndedEvent>(AttackEndedHandler);
-
-        //Debug.Log("Player Destroyed");
         EventAggregator.Post(null, new PlayerKilledEvent());
     }
 
@@ -78,25 +73,8 @@ public class Player : Character
     {
         _attackDirection = onEndDragAttackJoystickEvent.Direction;
         _attackSector.gameObject.SetActive(false);
-        _animator.SetBool("isFire", ChangeFireStatus(true));
+        _animator.SetBool(StringValueHelper.IsFire, ChangeFireStatus(true));
     }
-
-    //private void OnRotationBeforeAttackEndedHandler(object sender, OnRotationBeforeAttackEndedEvent onRotationBeforeAttackEndedEvent)
-    //{
-    //    if (transform == sender as Transform)
-    //        Attack();
-    //}
-    //private void AttackEndedHandler(object sender, AttackEndedEvent onRotationBeforeAttackEndedEvent)
-    //{
-    //    if (Weapon == sender as IWeapon)
-    //    {
-    //        //Debug.Log("Weapon from sender attack endded");
-    //        ChangeFireStatus(false);
-    //        _isAttackRotateEnded.Value = false;
-    //        _animator.SetBool("isFire", ChangeFireStatus(false));
-    //    }
-    //}
-
     #endregion
 
 }

@@ -13,6 +13,8 @@ public class ValueWrapper<T> where T : struct
 
 public static class MoveUtility 
 {
+    public const float LerpTreshHold = 0.001f;
+
     public static void NoAttackMoveMod(Rigidbody rigidbody,bool IsMoving,float speed)
     {
         if (IsMoving)
@@ -31,8 +33,8 @@ public static class MoveUtility
         if (IsMoving)
         { 
             rigidbody.velocity = new Vector3(direction.x, direction.z, direction.y) * speed;
-            animator.SetFloat("VelocityX", direction.x);
-            animator.SetFloat("VelocityZ", direction.y);
+            animator.SetFloat(StringValueHelper.VelocityX, direction.x);
+            animator.SetFloat(StringValueHelper.VelocityZ, direction.y);
         }
         else
         {
@@ -59,7 +61,7 @@ public static class MoveUtility
             return;
         }
 
-        if (Mathf.Abs(transform.forward.x - direction.x) <= 0.001f && Mathf.Abs(transform.forward.y - direction.z) <= 0.001f && !isRotateEnded.Value)
+        if (Mathf.Abs(transform.forward.x - direction.x) <= LerpTreshHold && Mathf.Abs(transform.forward.y - direction.z) <= LerpTreshHold && !isRotateEnded.Value)
         {
             isRotateEnded.Value = true;
             transform.forward = new Vector3(direction.x, direction.z, direction.y);

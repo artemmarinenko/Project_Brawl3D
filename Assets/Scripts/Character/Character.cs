@@ -7,6 +7,7 @@ public enum CharacterType {
             Adam,
             Eva
     }
+[RequireComponent(typeof(Rigidbody))]
 public class Character : MonoBehaviour, IMoveable, IAttackable
 {
     [SerializeField] protected float _angularSpeed = 20f;
@@ -61,16 +62,14 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
 
             if (!_isFire)
             {
-                _animator.SetFloat("Speed", 100f);
-
+                _animator.SetFloat(StringValueHelper.Speed, 100f);
             }
         }
 
         else if (direction == Vector3.zero && !_isFire)
         {
             _isMoving = false;
-            _animator.SetFloat("Speed", 0);
-
+            _animator.SetFloat(StringValueHelper.Speed, 0);
         }
     }
     public virtual void DOMove(Vector3 direction)
@@ -84,7 +83,6 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
         else if (_isFire)
         {
             MoveUtility.AttackMoveMod(_rigidBody, _animator, direction, _isMoving, _speedAttackMoveMod);
-            // Need to set attack direction to rotate;
             MoveUtility.RotateForAttack(transform, _angularSpeed, _attackDirection, _isAttackRotateEnded);
         }
     }
@@ -122,10 +120,9 @@ public class Character : MonoBehaviour, IMoveable, IAttackable
     {
         if (Weapon == sender as IWeapon)
         {
-            //Debug.Log("Weapon from sender attack endded");
             ChangeFireStatus(false);
             _isAttackRotateEnded.Value = false;
-            _animator.SetBool("isFire", ChangeFireStatus(false));
+            _animator.SetBool(StringValueHelper.IsFire, ChangeFireStatus(false));
         }
     }
 

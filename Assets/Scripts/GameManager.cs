@@ -67,17 +67,7 @@ public class GameManager : MonoBehaviour
         return PlayerCharacter;
     }
 
-    public void RespawnPlayer()
-    {
-        currentPlayer = CreatePlayer(BuildEvaPlayer(_playerEvaPrefab));
-        currentBotAdam.SetPlayer(currentPlayer.transform);
-        currentBotEva.SetPlayer(currentPlayer.transform);
-    }
-    
-    public void DeleteCamaraReference()
-    {
-        _camera.FollowedObject = null;
-    }
+  
     
 
     Player BuildAdamPlayer(Player prefab)
@@ -117,6 +107,18 @@ public class GameManager : MonoBehaviour
     }
 
 
+    public void RespawnPlayer()
+    {
+        currentPlayer = CreatePlayer(BuildEvaPlayer(_playerEvaPrefab));
+        currentBotAdam.SetPlayer(currentPlayer.transform);
+        currentBotEva.SetPlayer(currentPlayer.transform);
+    }
+
+    public void DeleteCamaraReference()
+    {
+        _camera.FollowedObject = null;
+    }
+
     private void OnPlayerKilledEventHandler(object sender, PlayerKilledEvent playerKilledEvent)
     {
         DeleteCamaraReference();
@@ -130,33 +132,20 @@ public class GameManager : MonoBehaviour
         Destroy(currentBotEva.gameObject);
         Destroy(currentAlly.gameObject);
         Destroy(currentPlayer.gameObject);
-        
-
-
-        //currentPlayer = CreatePlayer(BuildEvaPlayer(_playerEvaPrefab));
-
-        //currentBotAdam = BuildBotAdam(_botAdamPrefab, _startBotAdamPosition, currentPlayer.transform, BotLayer, _botTeamAttackMask);
-
-        //currentBotEva = BuildBotEva(_botEvaPrefab, _startBotEvaPosition, currentPlayer.transform, BotLayer, _botTeamAttackMask);
-
-        //currentAlly = BuildBotAdam(_botAdamPrefab, _startAllyPosition, currentBotAdam.transform, PlayerLayer, _playerTeamAttackMask);
-
     }
 
+    #region EventHandlers
     private void OnCrystallAddedEventHandler(object sender, CrystallAddedEvent crystalAddedEvent)
     {
        if((sender as Character).gameObject.layer == PlayerLayer)
         {
-            Debug.Log("Player");
             PlayerTeamScore += crystalAddedEvent.CrystalAmount;
             _playerTeamScore.text = PlayerTeamScore.ToString();
 
             if(PlayerTeamScore == _scoreToWin)
-            {
-                
-                Restart();
-            }
-
+                {
+                   // Restart();
+                }
         }
         else if ((sender as Character).gameObject.layer == BotLayer)
         {
@@ -165,15 +154,11 @@ public class GameManager : MonoBehaviour
             _botTeamScore.text = BotTeamScore.ToString();
 
             if (PlayerTeamScore == _scoreToWin)
-            {
-               
-                Restart();
-            }
-
+                {             
+                  //  Restart();
+                }
         }
-
     }
-
 
     private void OnBotKilledEventHandler(object sender, BotKilledEvent botKilledEvent)
     {
@@ -206,6 +191,7 @@ public class GameManager : MonoBehaviour
             //currentAlly.GetComponent<MeshRenderer>().material.color = Color.white;
         }
     }
-            
-    }
+
+    #endregion
+}
 
